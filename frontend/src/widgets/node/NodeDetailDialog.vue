@@ -2,9 +2,9 @@
 import { ref, computed, reactive } from "vue";
 import { t } from "@/lang/i18n";
 import { useRemoteNode } from "@/hooks/useRemoteNode";
-import { message, type FormInstance } from "ant-design-vue";
+import { message, Modal, type FormInstance } from "ant-design-vue";
 import { type RemoteNodeDetail } from "@/hooks/useRemoteNode";
-import { reportErrorMsg } from "@/tools/validator";
+import { reportErrorMsg, isLocalNetworkIP } from "@/tools/validator";
 
 const { addNode, deleteNode, updateNode } = useRemoteNode();
 
@@ -75,6 +75,16 @@ const dialog = reactive({
   submit: async () => {
     try {
       await dialog.check();
+      if (isLocalNetworkIP(dialog.data.ip)) {
+        await new Promise<void>((resolve) => {
+          Modal.confirm({
+            title: t("TXT_CODE_36cae384"),
+            content: t("TXT_CODE_ea6e5e5e"),
+            okText: t("TXT_CODE_d507abff"),
+            onOk: () => resolve()
+          });
+        });
+      }
       dialog.loading = true;
       if (editMode.value) {
         await updateNode(dialog.uuid, dialog.data);

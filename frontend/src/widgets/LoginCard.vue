@@ -34,7 +34,7 @@ const formData = reactive({
 });
 
 const { execute: login } = loginUser();
-const { updateUserInfo, isAdmin } = useAppStateStore();
+const { updateUserInfo, isAdmin, state: appConfig } = useAppStateStore();
 
 const loginStep = ref(0);
 const is2Fa = ref(false);
@@ -88,6 +88,10 @@ const loginSuccess = () => {
   } else {
     router.push({ path: "/customer" });
   }
+};
+
+const openBuyInstanceDialog = async () => {
+  router.push({ path: "/shop" });
 };
 </script>
 

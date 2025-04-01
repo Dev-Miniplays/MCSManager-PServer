@@ -2,6 +2,9 @@ import userSystem from "../service/user_service";
 import RemoteServiceSubsystem from "../service/remote_service";
 import RemoteRequest from "../service/remote_command";
 import { t } from "i18next";
+import { systemConfig } from "../setting";
+import { isEmpty, toText } from "common/dist";
+import { IGlobalInstanceConfig } from "common/global";
 
 export enum INSTANCE_STATUS {
   BUSY = -1,
@@ -18,7 +21,7 @@ export const INSTANCE_STATUS_TEXT: Record<number, string> = {
   [INSTANCE_STATUS.RUNNING]: t("TXT_CODE_bdb620b9")
 };
 
-export interface AdvancedInstanceInfo {
+export interface IAdvancedInstanceInfo {
   instanceUuid: string;
   daemonId: string;
   hostIp?: string;
@@ -69,7 +72,7 @@ export async function getInstancesByUuid(
   if (!user) throw new Error("The UID does not exist");
 
   // Advanced functions are optional, analyze each instance data
-  let resInstances: AdvancedInstanceInfo[] = [];
+  let resInstances: IAdvancedInstanceInfo[] = [];
   if (advanced) {
     const instances = user.instances;
     for (const iterator of instances) {
@@ -134,5 +137,28 @@ export async function getInstancesByUuid(
     open2FA: user.open2FA,
     secret: user.secret,
     token: ""
+  };
+}
+
+export function checkInstanceAdvancedParams(
+  config: IGlobalInstanceConfig,
+  isTopPermission: boolean = false
+) {
+  const canChangeCmd = systemConfig?.allowChangeCmd;
+  if (!isTopPermission) {
+    if (!canChangeCmd) return {};
+    if (config.processType !== "docker") return {};
+  }
+
+  const startCommand = toText(config.startCommand);
+  const updateCommand = toText(config.updateCommand);
+  const dockerEnv = Array.isArray(config.docker?.env) ? config.docker.env : [];
+
+  return {
+    startCommand,
+    updateCommand,
+    docker: {
+      env: dockerEnv
+    }
   };
 }

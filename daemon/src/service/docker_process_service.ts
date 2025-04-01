@@ -13,6 +13,7 @@ import { IInstanceProcess } from "../entity/instance/interface";
 import { AsyncTask } from "./async_task_service";
 import iconv from "iconv-lite";
 import { toText } from "common";
+import fs from "fs-extra";
 
 // Error exception at startup
 export class StartupDockerProcessError extends Error {
@@ -84,19 +85,19 @@ export class SetupDockerContainer extends AsyncTask {
     }
 
     // memory limit
-    let maxMemory = undefined;
+    let maxMemory: number | undefined = undefined;
     if (instance.config.docker.memory) maxMemory = instance.config.docker.memory * 1024 * 1024;
 
     // CPU usage calculation
-    let cpuQuota = undefined;
-    let cpuPeriod = undefined;
+    let cpuQuota: number | undefined = undefined;
+    let cpuPeriod: number | undefined = undefined;
     if (instance.config.docker.cpuUsage) {
       cpuQuota = instance.config.docker.cpuUsage * 10 * 1000;
       cpuPeriod = 1000 * 1000;
     }
 
     // Check the number of CPU cores
-    let cpusetCpus = undefined;
+    let cpusetCpus: string | undefined = undefined;
     if (instance.config.docker.cpusetCpus) {
       const arr = instance.config.docker.cpusetCpus.split(",");
       arr.forEach((v) => {
@@ -116,7 +117,7 @@ export class SetupDockerContainer extends AsyncTask {
     // Whether to use TTY mode
     const isTty = instance.config.terminalOption.pty;
 
-    const workingDir = instance.config.docker.workingDir ?? "";
+    const workingDir = instance.config.docker.workingDir || undefined;
 
     let cwd = instance.absoluteCwdPath();
     const hostRealPath = toText(process.env.MCSM_DOCKER_WORKSPACE_PATH);
@@ -126,8 +127,24 @@ export class SetupDockerContainer extends AsyncTask {
 
     if (workingDir) {
       instance.println("CONTAINER", $t("TXT_CODE_e76e49e9") + cwd + " --> " + workingDir + "\n");
-    } else {
-      instance.println("CONTAINER", $t("TXT_CODE_ffa884f9"));
+    }
+
+    const mounts: Docker.MountConfig =
+      extraBinds.map((v) => {
+        const hostPath = instance.parseTextParams(v.hostPath);
+        if (!fs.existsSync(hostPath)) fs.mkdirsSync(hostPath);
+        return {
+          Type: "bind",
+          Source: hostPath,
+          Target: instance.parseTextParams(v.containerPath)
+        };
+      }) || [];
+    if (workingDir && cwd) {
+      mounts.push({
+        Type: "bind",
+        Source: cwd,
+        Target: instance.parseTextParams(workingDir)
+      });
     }
 
     logger.info("----------------");
@@ -138,32 +155,11 @@ export class SetupDockerContainer extends AsyncTask {
     logger.info(`CWD: ${cwd}, WORKING_DIR: ${workingDir}`);
     logger.info(`NET_MODE: ${instance.config.docker.networkMode}`);
     logger.info(`OPEN_PORT: ${JSON.stringify(publicPortArray)}`);
-    logger.info(
-      `BINDS: ${JSON.stringify([
-        workingDir ? `${cwd} --> ${workingDir}` : "<Working directory not mounted>",
-        ...extraBinds
-      ])}`
-    );
+    logger.info(`Volume Mounts: ${JSON.stringify(mounts)}`);
     logger.info(`NET_ALIASES: ${JSON.stringify(instance.config.docker.networkAliases)}`);
     logger.info(`MEM_LIMIT: ${maxMemory || "--"} MB`);
     logger.info(`TYPE: Docker Container`);
     logger.info("----------------");
-
-    const mounts: Docker.MountConfig =
-      extraBinds.map((v) => {
-        return {
-          Type: "bind",
-          Source: instance.parseTextParams(v.hostPath),
-          Target: instance.parseTextParams(v.containerPath)
-        };
-      }) || [];
-    if (workingDir && cwd) {
-      mounts.push({
-        Type: "bind",
-        Source: cwd,
-        Target: workingDir
-      });
-    }
 
     // Start Docker container creation and running
     const docker = new DefaultDocker();
@@ -175,12 +171,13 @@ export class SetupDockerContainer extends AsyncTask {
       AttachStdout: true,
       AttachStderr: true,
       Tty: isTty,
-      WorkingDir: workingDir,
-      Cmd: commandList ? commandList : undefined,
+      WorkingDir: instance.config.docker.changeWorkdir ? workingDir : undefined,
+      Cmd: commandList.length > 0 ? commandList : undefined,
       OpenStdin: true,
       StdinOnce: false,
       ExposedPorts: exposedPorts,
       Env: instance.config.docker?.env || [],
+
       HostConfig: {
         Memory: maxMemory,
         AutoRemove: true,
@@ -203,7 +200,7 @@ export class SetupDockerContainer extends AsyncTask {
     await this.container.start();
 
     // Listen to events
-    this.container.wait(async (v) => {
+    this.container.wait(() => {
       this.stop();
     });
   }

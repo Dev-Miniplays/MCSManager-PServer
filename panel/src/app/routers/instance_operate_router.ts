@@ -1,11 +1,11 @@
 import Router from "@koa/router";
-import permission from "../middleware/permission";
+import permission, { verificationFailed } from "../middleware/permission";
 import validator from "../middleware/validator";
 import RemoteServiceSubsystem from "../service/remote_service";
 import RemoteRequest, { RemoteRequestTimeoutError } from "../service/remote_command";
 import { timeUuid } from "../service/password";
 import { getUserUuid } from "../service/passport_service";
-import { isHaveInstanceByUuid, isTopPermission } from "../service/permission_service";
+import { isHaveInstanceByUuid } from "../service/permission_service";
 import { $t } from "../i18n";
 import { isTopPermissionByUuid } from "../service/permission_service";
 import { isEmpty, toText, toBoolean, toNumber } from "common";
@@ -13,6 +13,7 @@ import { ROLE } from "../entity/user";
 import axios from "axios";
 import { systemConfig } from "../setting";
 import { IQuickStartTemplate } from "common/global";
+import { checkInstanceAdvancedParams } from "../service/instance_service";
 
 const router = new Router({ prefix: "/protected_instance" });
 
@@ -420,9 +421,14 @@ router.put(
       const crlf = !isEmpty(config.crlf) ? toNumber(config?.crlf) : null;
       const oe = !isEmpty(config.oe) ? toText(config?.oe) : null;
       const ie = !isEmpty(config.ie) ? toText(config?.ie) : null;
+      const fileCode = toText(config.fileCode);
       const stopCommand = config.stopCommand ? toText(config.stopCommand) : null;
-
       const remoteService = RemoteServiceSubsystem.getInstance(daemonId || "");
+      const isTopPermission = isTopPermissionByUuid(getUserUuid(ctx));
+
+      let advancedConfig = {};
+      advancedConfig = checkInstanceAdvancedParams(config, isTopPermission);
+
       const result = await new RemoteRequest(remoteService).request("instance/update", {
         instanceUuid,
         config: {
@@ -438,7 +444,9 @@ router.put(
           rconPort,
           rconPassword,
           enableRcon,
-          tag: instanceTags
+          tag: instanceTags,
+          fileCode,
+          ...advancedConfig
         }
       });
       ctx.body = result;

@@ -9,6 +9,8 @@ import type { AntColumnsType } from "@/types/ant";
 import UploadFileDialogVue from "./UploadFileDialog.vue";
 import TaskLoadingDialog from "./TaskLoadingDialog.vue";
 import TagsDialog from "./TagsDialog.vue";
+import DeleteInstanceDialog from "@/widgets/instance/dialogs/DeleteInstanceDialog.vue";
+import ImageViewerDialog from "@/widgets/instance/dialogs/ImageViewer.vue";
 
 interface DockerConfigItem {
   host: string;
@@ -80,7 +82,8 @@ export async function usePortEditDialog(data: PortConfigItem[] = []) {
           title: t("TXT_CODE_ad1c674c"),
           placeholder: "tcp/udp"
         }
-      ] as AntColumnsType[]
+      ] as AntColumnsType[],
+      textarea: false
     }).mount<PortConfigItem[]>(KvOptionsDialogVue)) || []
   );
 }
@@ -102,7 +105,8 @@ export async function useVolumeEditDialog(data: DockerConfigItem[] = []) {
           dataIndex: "container",
           title: t("TXT_CODE_30258325")
         }
-      ] as AntColumnsType[]
+      ] as AntColumnsType[],
+      textarea: true
     }).mount<DockerConfigItem[]>(KvOptionsDialogVue)) || []
   );
 }
@@ -123,7 +127,8 @@ export async function useDockerEnvEditDialog(data: DockerEnvItem[] = []) {
           dataIndex: "value",
           title: t("TXT_CODE_115e8a25")
         }
-      ] as AntColumnsType[]
+      ] as AntColumnsType[],
+      textarea: true
     }).mount<DockerEnvItem[]>(KvOptionsDialogVue)) || []
   );
 }
@@ -151,4 +156,19 @@ export async function openInstanceTagsEditor(
   })
     .load<InstanceType<typeof TagsDialog>>(TagsDialog)
     .openDialog();
+}
+
+export async function useDeleteInstanceDialog(instanceId: string, daemonId: string) {
+  return await useMountComponent({ instanceId, daemonId }).mount<boolean>(DeleteInstanceDialog);
+}
+
+export async function useImageViewerDialog(
+  instanceId: string,
+  daemonId: string,
+  fileName: string,
+  frontDir: string
+) {
+  return await useMountComponent({ instanceId, daemonId, fileName, frontDir }).mount(
+    ImageViewerDialog
+  );
 }

@@ -55,8 +55,8 @@ router.get("/download/:key/:fileName", async (ctx) => {
 
 // File upload route
 router.post("/upload/:key", async (ctx) => {
-  const key = ctx.params.key;
-  const unzip = ctx.query.unzip;
+  const key = String(ctx.params.key);
+  const unzip = Boolean(ctx.query.unzip);
   const zipCode = String(ctx.query.code);
   let tmpFiles: formidable.File | formidable.File[] | undefined;
   try {
@@ -120,8 +120,8 @@ router.post("/upload/:key", async (ctx) => {
       });
 
       if (unzip) {
-        const fileManager = new FileManager(instance.absoluteCwdPath());
-        fileManager.unzip(fileSaveAbsolutePath, "", zipCode);
+        const instanceFiles = new FileManager(instance.absoluteCwdPath());
+        instanceFiles.unzip(fileSaveAbsolutePath, ".", zipCode);
       }
       ctx.body = "OK";
       return;

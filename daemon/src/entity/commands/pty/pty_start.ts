@@ -47,22 +47,23 @@ export class GoPtyProcessAdapter extends EventEmitter implements IInstanceProces
     this.initNamedPipe();
   }
 
-  private initNamedPipe() {
-    if (!fs.existsSync(this.pipeName)) {
+  private async initNamedPipe() {
+    try {
+      const fd = await fs.open(this.pipeName, "w");
+      const writePipe = fs.createWriteStream("", { fd });
+      writePipe.on("close", () => {});
+      writePipe.on("end", () => {});
+      writePipe.on("error", (err) => {
+        logger.error("Pipe error:", this.pipeName, err);
+      });
+      this.pipeClient = writePipe;
+    } catch (error) {
       throw new Error(
         $t("TXT_CODE_9d1d244f", {
-          pipeName: this.pipeName
+          pipeName: error
         })
       );
     }
-    const fd = fs.openSync(this.pipeName, "w");
-    const writePipe = fs.createWriteStream("", { fd });
-    writePipe.on("close", () => {});
-    writePipe.on("end", () => {});
-    writePipe.on("error", (err) => {
-      logger.error("Pipe error:", this.pipeName, err);
-    });
-    this.pipeClient = writePipe;
   }
 
   public resize(w: number, h: number) {
@@ -115,10 +116,6 @@ export class GoPtyProcessAdapter extends EventEmitter implements IInstanceProces
 }
 
 export default class PtyStartCommand extends AbsStartCommand {
-  constructor() {
-    super("PtyStartCommand");
-  }
-
   readPtySubProcessConfig(subProcess: ChildProcessWithoutNullStreams): Promise<IPtySubProcessCfg> {
     return new Promise((r, j) => {
       const errConfig = {
@@ -152,8 +149,7 @@ export default class PtyStartCommand extends AbsStartCommand {
       !instance.config.oe
     )
       throw new StartupError($t("TXT_CODE_pty_start.cmdErr"));
-    if (!fs.existsSync(instance.absoluteCwdPath()))
-      throw new StartupError($t("TXT_CODE_pty_start.cwdNotExist"));
+    if (!fs.existsSync(instance.absoluteCwdPath())) fs.mkdirpSync(instance.absoluteCwdPath());
     if (!path.isAbsolute(path.normalize(instance.absoluteCwdPath())))
       throw new StartupError($t("TXT_CODE_pty_start.mustAbsolutePath"));
 

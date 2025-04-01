@@ -77,7 +77,9 @@ const {
   getFileStatus,
   changePermission,
   toDisk,
-  oneSelected
+  oneSelected,
+  isImage,
+  showImage
 } = useFileManager(instanceId, daemonId);
 
 const { openRightClickMenu } = useRightClickMenu();
@@ -188,6 +190,13 @@ const handleDrop = (e: DragEvent) => {
 const editFile = (fileName: string) => {
   const path = breadcrumbs[breadcrumbs.length - 1].path + fileName;
   FileEditorDialog.value?.openDialog(path, fileName);
+};
+
+const handleClickFile = async (file: DataType) => {
+  if (file.type === 0) return rowClickTable(file.name, file.type);
+  const fileExtName = getFileExtName(file.name);
+  if (isImage(fileExtName)) return showImage(file);
+  return editFile(file.name);
 };
 
 const menuList = (record: DataType) =>
@@ -309,7 +318,11 @@ onUnmounted(() => {
           </template>
           <template #right>
             <a-typography-text v-if="selectedRowKeys.length">
-              {{ t("TXT_CODE_7b2c5414") + ` ${String(selectedRowKeys.length)} ` + t("TXT_CODE_5cd3b4bd") }}
+              {{
+                `${t("TXT_CODE_7b2c5414")} ${String(selectedRowKeys.length)} ${t(
+                  "TXT_CODE_5cd3b4bd"
+                )}`
+              }}
             </a-typography-text>
 
             <a-upload
@@ -467,12 +480,13 @@ onUnmounted(() => {
                 :custom-row="
                   (record: DataType) => {
                     return {
-                      onContextmenu: (e: MouseEvent) => handleRightClickRow(e, record)
+                      onContextmenu: (e: MouseEvent) => handleRightClickRow(e, record as DataType)
                     };
                   }
                 "
                 @change="
-                  (e) => handleTableChange({ current: e.current || 0, pageSize: e.pageSize || 0 })
+                  (e: any) =>
+                    handleTableChange({ current: e.current || 0, pageSize: e.pageSize || 0 })
                 "
               >
                 <template #bodyCell="{ column, record }">
@@ -480,11 +494,7 @@ onUnmounted(() => {
                     <a-button
                       type="link"
                       class="file-name"
-                      @click="
-                        record.type !== 1
-                          ? rowClickTable(record.name, record.type)
-                          : editFile(record.name)
-                      "
+                      @click="handleClickFile(record as DataType)"
                     >
                       <span class="mr-4">
                         <component

@@ -209,6 +209,7 @@ export default class Instance extends EventEmitter {
       configureEntityParams(this.config.docker, cfg.docker, "cpuUsage", Number);
       configureEntityParams(this.config.docker, cfg.docker, "env");
       configureEntityParams(this.config.docker, cfg.docker, "workingDir", String);
+      configureEntityParams(this.config.docker, cfg.docker, "changeWorkdir", Boolean);
     }
     if (cfg.pingConfig) {
       configureEntityParams(this.config.pingConfig, cfg.pingConfig, "ip", String);
@@ -277,6 +278,7 @@ export default class Instance extends EventEmitter {
     this.releaseResources();
     if (this.instanceStatus != Instance.STATUS_STOP) {
       this.instanceStatus = Instance.STATUS_STOP;
+      this.startTimestamp = 0;
       this.emit("exit", code);
       StorageSubsystem.store("InstanceConfig", this.instanceUuid, this.config);
     }
@@ -286,21 +288,20 @@ export default class Instance extends EventEmitter {
     this.lifeCycleTaskManager.execLifeCycleTask(0);
 
     // If automatic restart is enabled, the startup operation is performed immediately
-    if (this.config.eventTask.autoRestart) {
-      if (!this.config.eventTask.ignore) {
-        this.execPreset("start")
-          .then(() => {
-            this.println($t("TXT_CODE_instanceConf.info"), $t("TXT_CODE_instanceConf.autoRestart"));
-          })
-          .catch((err) => {
-            this.println(
-              $t("TXT_CODE_instanceConf.error"),
-              $t("TXT_CODE_instanceConf.autoRestartErr", { err: err })
-            );
-          });
-      }
-      this.config.eventTask.ignore = false;
+    if (!this.config.eventTask.ignore && this.config.eventTask.autoRestart) {
+      this.execPreset("start")
+        .then(() => {
+          this.println($t("TXT_CODE_instanceConf.info"), $t("TXT_CODE_instanceConf.autoRestart"));
+        })
+        .catch((err) => {
+          this.println(
+            $t("TXT_CODE_instanceConf.error"),
+            $t("TXT_CODE_instanceConf.autoRestartErr", { err: err })
+          );
+        });
     }
+
+    this.config.eventTask.ignore = false;
 
     // Turn off the warning immediately after startup, usually the startup command is written incorrectly
     const currentTimestamp = new Date().getTime();
@@ -308,6 +309,10 @@ export default class Instance extends EventEmitter {
     if (currentTimestamp - this.startTimestamp < startThreshold) {
       this.println("ERROR", $t("TXT_CODE_aae2918f"));
     }
+  }
+
+  ignoreEventTaskOnce() {
+    if (this.config.eventTask) this.config.eventTask.ignore = true;
   }
 
   // custom output method, formatting

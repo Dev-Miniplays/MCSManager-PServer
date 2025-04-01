@@ -120,13 +120,15 @@ onMounted(async () => {
           <div
             v-for="(item, index) in dockerPortsArray(instanceInfo?.config.docker.ports ?? [])"
             :key="index"
-            style="margin-bottom: 2px"
+            class="mb-4"
           >
-            <span>{{ t("TXT_CODE_8dfc41ef") }}: {{ item.host }}</span>
-            <span style="margin-left: 6px">{{ t("TXT_CODE_8f8103b7") }}: {{ item.container }}</span>
-            <span style="margin-left: 8px">
+            <span>
               <a-tag color="green">{{ item.protocol.toUpperCase() }}</a-tag>
             </span>
+            <a-tag>
+              <span>{{ t("TXT_CODE_8dfc41ef") }}: {{ item.host }}</span>
+              <span class="ml-4"> {{ t("TXT_CODE_8f8103b7") }}: {{ item.container }} </span>
+            </a-tag>
           </div>
         </div>
       </a-typography-paragraph>
@@ -136,6 +138,22 @@ onMounted(async () => {
       </a-typography-paragraph>
       <a-typography-paragraph v-if="!instanceGameServerInfo">
         {{ t("TXT_CODE_8b8e08a6") }}{{ parseTimestamp(instanceInfo?.config.createDatetime) }}
+      </a-typography-paragraph>
+      <a-typography-paragraph v-if="!instanceGameServerInfo">
+        <span>{{ t("TXT_CODE_cec321b4") }}{{ instanceInfo?.config.oe.toUpperCase() }} </span>
+        <span class="ml-6">
+          {{ t("TXT_CODE_400a4210") }}{{ instanceInfo?.config.ie.toUpperCase() }}
+        </span>
+      </a-typography-paragraph>
+      <a-typography-paragraph>
+        <a-typography-text :title="instanceInfo?.instanceUuid">
+          {{ t("TXT_CODE_30051f9b") }}
+        </a-typography-text>
+        <a-typography-text :copyable="{ text: instanceInfo?.instanceUuid }"> </a-typography-text>
+        <a-typography-text class="ml-20" :title="daemonId">
+          {{ t("TXT_CODE_5f2d2e30") }}
+        </a-typography-text>
+        <a-typography-text :copyable="{ text: daemonId }"> </a-typography-text>
       </a-typography-paragraph>
     </template>
   </CardPanel>
