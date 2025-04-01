@@ -23,8 +23,8 @@ export enum INSTANCE_STATUS_CODE {
 }
 
 export const INSTANCE_STATUS: Record<INSTANCE_STATUS_CODE, string> = {
-  [INSTANCE_STATUS_CODE.BUSY]: t("TXT_CODE_342a04a9"),
-  [INSTANCE_STATUS_CODE.STOPPED]: t("TXT_CODE_15f2e564"),
+  [INSTANCE_STATUS_CODE.BUSY]: t("TXT_CODE_342a04a0"),
+  [INSTANCE_STATUS_CODE.STOPPED]: t("TXT_CODE_15f2e565"),
   [INSTANCE_STATUS_CODE.STOPPING]: t("TXT_CODE_a409b8a9"),
   [INSTANCE_STATUS_CODE.STARTING]: t("TXT_CODE_175b570d"),
   [INSTANCE_STATUS_CODE.RUNNING]: t("TXT_CODE_bdb620b9")
@@ -95,7 +95,8 @@ export const ScheduleAction = {
   stop: t("TXT_CODE_148d6467"),
   start: t("TXT_CODE_8c7318b3"),
   restart: t("TXT_CODE_77cc12da"),
-  kill: t("TXT_CODE_1c36c8f2")
+  kill: t("TXT_CODE_1c36c8f2"),
+  update: t("TXT_CODE_40ca4f2")
 };
 
 export const ScheduleType = {

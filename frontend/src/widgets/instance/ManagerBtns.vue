@@ -86,7 +86,7 @@ const btns = computed(() => {
         return (
           !isGlobalTerminal.value &&
           ![TYPE_UNIVERSAL, TYPE_WEB_SHELL].includes(instanceInfo.value?.config.type || "")
-        );
+        ) && isAdmin.value;
       },
       click: (): void => {
         toPage({
@@ -111,11 +111,12 @@ const btns = computed(() => {
       click: () => {
         mcSettingsDialog.value?.openDialog();
       },
-      condition: () => instanceInfo.value?.config.type.includes(TYPE_MINECRAFT_JAVA) ?? false
+      condition: () => (instanceInfo.value?.config.type.includes(TYPE_MINECRAFT_JAVA) ?? false) && isAdmin.value
     },
     {
       title: t("TXT_CODE_656a85d8"),
       icon: BuildOutlined,
+      condition: () => isAdmin.value,
       click: () => {
         rconSettingsDialog.value?.openDialog();
       }
@@ -123,6 +124,7 @@ const btns = computed(() => {
     {
       title: t("TXT_CODE_d23631cb"),
       icon: CodeOutlined,
+      condition: () => isAdmin.value,
       click: () => {
         terminalConfigDialog.value?.openDialog();
       }
@@ -144,6 +146,7 @@ const btns = computed(() => {
     {
       title: t("TXT_CODE_d341127b"),
       icon: DashboardOutlined,
+      condition: () => isAdmin.value,
       click: () => {
         eventConfigDialog.value?.openDialog();
       }

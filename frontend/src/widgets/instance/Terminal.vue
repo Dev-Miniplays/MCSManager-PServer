@@ -233,8 +233,6 @@ onMounted(async () => {
                 </a-tag>
               </span>
 
-              <a-tag color="purple"> {{ instanceTypeText }} </a-tag>
-
               <span
                 v-if="instanceInfo?.watcher && instanceInfo?.watcher > 1 && !isPhone"
                 class="ml-16"

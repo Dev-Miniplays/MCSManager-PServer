@@ -186,6 +186,11 @@ class InstanceControlSubsystem {
       if (task.action === "kill") {
         return await instance.execPreset("kill");
       }
+      if (task.action === "update") {
+        if (instanceStatus === 0) {
+          return await instance.execPreset("update");
+        }
+      }
     } catch (error: any) {
       logger.error(
         $t("TXT_CODE_system_instance_control.execCmdErr", {

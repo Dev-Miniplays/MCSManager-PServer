@@ -15,14 +15,11 @@ export const configData: {
       "generator-settings": t("TXT_CODE_88427611"),
       "allow-nether": t("TXT_CODE_b12787d7"),
       "level-name": t("TXT_CODE_c2a8378b"),
-      "enable-query": t("TXT_CODE_1155db3a"),
       "allow-flight": t("TXT_CODE_97f5701e"),
-      "server-port": t("TXT_CODE_4cef8979"),
       "level-type": t("TXT_CODE_9f28d67b"),
       "enable-rcon": t("TXT_CODE_83914d85"),
       "force-gamemode": t("TXT_CODE_7284c68e"),
       "level-seed": t("TXT_CODE_d7a7a095"),
-      "server-ip": t("TXT_CODE_692957"),
       "max-build-height": t("TXT_CODE_2054155a"),
       "spawn-npcs": t("TXT_CODE_a6a04fa3"),
       "white-list": t("TXT_CODE_dd002fae"),
@@ -30,7 +27,6 @@ export const configData: {
       "snooper-enabled": t("TXT_CODE_e5b0feda"),
       hardcore: t("TXT_CODE_2debc7ae"),
       "texture-pack": t("TXT_CODE_c62a8fa1"),
-      "online-mode": t("TXT_CODE_4306a0d0"),
       pvp: t("TXT_CODE_b214a52d"),
       "enforce-secure-profile": t("TXT_CODE_cbb958f2"),
       difficulty: t("TXT_CODE_da234f4f"),
@@ -50,10 +46,6 @@ export const configData: {
       "max-world-size": t("TXT_CODE_738bc836"),
       "function-permission-level": t("TXT_CODE_791a4c9b"),
       "max-tick-time": t("TXT_CODE_61dd421d"),
-      "prevent-proxy-connections": t("TXT_CODE_b16fc7a6"),
-      "rcon.port": t("TXT_CODE_2a1fc6cc"),
-      "rcon.password": t("TXT_CODE_1a0ab98b"),
-      "query.port": t("TXT_CODE_e60567a8"),
       "use-native-transport": t("TXT_CODE_3df4beaf"),
       debug: t("TXT_CODE_c745cf56"),
       "broadcast-rcon-to-ops": t("TXT_CODE_ffebf0bf"),
@@ -90,7 +82,6 @@ export const configData: {
         "query-plugins": t("TXT_CODE_caf10268"),
         "deprecated-verbose": t("TXT_CODE_9867da6b"),
         "shutdown-message": t("TXT_CODE_6071bd0b"),
-        "minimum-api": t("TXT_CODE_9df68e04"),
         "use-map-color-cache": t("TXT_CODE_59a76359")
       },
       "spawn-limits": {
@@ -119,7 +110,6 @@ export const configData: {
     config: {
       "server-name": t("TXT_CODE_e81c77bc"),
       "allow-cheats": t("TXT_CODE_69ad6852"),
-      "server-portv6": t("TXT_CODE_e057798f"),
       "tick-distance": t("TXT_CODE_a2c8c88a"),
       "max-threads": t("TXT_CODE_fc7ac5ea"),
       "default-player-permission-level": t("TXT_CODE_50511e8f"),
@@ -143,12 +133,9 @@ export const configData: {
       "level-name": t("TXT_CODE_c2a8378b"),
       "enable-query": t("TXT_CODE_1155db3a"),
       "allow-flight": t("TXT_CODE_97f5701e"),
-      "server-port": t("TXT_CODE_a379038f"),
       "level-type": t("TXT_CODE_d00c21bb"),
-      "enable-rcon": t("TXT_CODE_83914d85"),
       "force-gamemode": t("TXT_CODE_7284c68e"),
       "level-seed": t("TXT_CODE_d7a7a095"),
-      "server-ip": t("TXT_CODE_87e448ae"),
       "max-build-height": t("TXT_CODE_2054155a"),
       "spawn-npcs": t("TXT_CODE_a6a04fa3"),
       "white-list": t("TXT_CODE_8fe9c7f7"),
@@ -157,7 +144,6 @@ export const configData: {
       "snooper-enabled": t("TXT_CODE_e5b0feda"),
       hardcore: t("TXT_CODE_2debc7ae"),
       "texture-pack": t("TXT_CODE_c62a8fa1"),
-      "online-mode": t("TXT_CODE_e96a055e"),
       pvp: t("TXT_CODE_b214a52d"),
       difficulty: t("TXT_CODE_da234f4f"),
       "player-idle-timeout": t("TXT_CODE_cafe41ab"),
@@ -176,10 +162,6 @@ export const configData: {
       "max-world-size": t("TXT_CODE_738bc836"),
       "function-permission-level": t("TXT_CODE_791a4c9b"),
       "max-tick-time": t("TXT_CODE_61dd421d"),
-      "prevent-proxy-connections": t("TXT_CODE_b16fc7a6"),
-      "rcon.port": t("TXT_CODE_2a1fc6cc"),
-      "rcon.password": t("TXT_CODE_1a0ab98b"),
-      "query.port": t("TXT_CODE_e60567a8"),
       "use-native-transport": t("TXT_CODE_3df4beaf"),
       debug: t("TXT_CODE_c745cf56"),
       "broadcast-rcon-to-ops": t("TXT_CODE_ffebf0bf"),
@@ -216,10 +198,7 @@ export const configData: {
         "moved-too-quickly-multiplier": t("TXT_CODE_eccd1c6c"),
         "moved-wrongly-threshold": t("TXT_CODE_c0a49b60"),
         "sample-count": t("TXT_CODE_9b5dcfdd"),
-        bungeecord: t("TXT_CODE_72d36de"),
         "timeout-time": t("TXT_CODE_628f6851"),
-        "restart-on-crash": t("TXT_CODE_741fdde4"),
-        "restart-script": t("TXT_CODE_6be8dbe7")
       },
       messages: {
         whitelist: t("TXT_CODE_8b8c52f"),
@@ -516,17 +495,6 @@ export const configData: {
         "max-per-tick": t("TXT_CODE_2a84466d"),
         rate: t("TXT_CODE_63a4602e")
       },
-      proxies: {
-        "bungee-cord": {
-          "online-mode": t("TXT_CODE_2fb7e284")
-        },
-        "proxy-protocol": t("TXT_CODE_f5cbef5c"),
-        velocity: {
-          enabled: t("TXT_CODE_ab839970"),
-          "online-mode": t("TXT_CODE_f2d5dd5"),
-          secret: t("TXT_CODE_7f8f267f")
-        }
-      },
       scoreboards: {
         "save-empty-scoreboard-teams": t("TXT_CODE_d649b01e"),
         "track-plugin-scoreboards": t("TXT_CODE_13aa13dd")
@@ -660,17 +628,6 @@ export const configData: {
       "player-auto-save": {
         "max-per-tick": t("TXT_CODE_2a84466d"),
         rate: t("TXT_CODE_63a4602e")
-      },
-      proxies: {
-        "bungee-cord": {
-          "online-mode": t("TXT_CODE_2fb7e284")
-        },
-        "proxy-protocol": t("TXT_CODE_f5cbef5c"),
-        velocity: {
-          enabled: t("TXT_CODE_ab839970"),
-          "online-mode": t("TXT_CODE_f2d5dd5"),
-          secret: t("TXT_CODE_7f8f267f")
-        }
       },
       scoreboards: {
         "save-empty-scoreboard-teams": t("TXT_CODE_d649b01e"),

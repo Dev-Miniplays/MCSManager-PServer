@@ -157,17 +157,6 @@ const loginSuccess = () => {
             </form>
 
             <div class="mt-24 flex-between align-center">
-              <div class="mcsmanager-link">
-                <div
-                  v-if="pageInfoResult?.loginInfo"
-                  class="global-markdown-html"
-                  v-html="markdownToHTML(pageInfoResult?.loginInfo || '')"
-                ></div>
-                Powered by
-                <a href="https://mcsmanager.com" target="_blank" rel="noopener noreferrer">
-                  MCSManager
-                </a>
-              </div>
               <a-button size="large" type="primary" style="min-width: 95px" @click="handleLogin">
                 {{ t("TXT_CODE_d507abff") }}
               </a-button>
