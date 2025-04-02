@@ -38,7 +38,7 @@ export function getDescriptionByTitle(description: Description, title: string = 
 
 export function jsonToMap(json: JsonData, topTitle = "", map = {}) {
   for (const key in json) {
-    let title = null;
+    let title = "";
     if (topTitle) {
       title = `${topTitle}/${key}`;
     } else {
@@ -144,8 +144,8 @@ export const dockerPortsParse = (ports: string[]) => {
 
   let p = isIPv6(ports.join(":")) ? joinArr.split(":") : ports;
 
-  let p1 = [],
-    p2 = [];
+  let p1: string[] = [],
+    p2: string[] = [];
 
   for (let i = 0; i < p.length; i++) {
     if (

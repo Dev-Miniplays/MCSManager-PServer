@@ -11,6 +11,7 @@
     "composite": true,
     "module": "ESNext",
     "moduleResolution": "node",
-    "types": ["node"]
+    "types": ["node"],
+    "noImplicitAny": false
   }
 }

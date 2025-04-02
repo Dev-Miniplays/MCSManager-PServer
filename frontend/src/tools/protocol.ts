@@ -24,8 +24,8 @@ export function parseForwardAddress(addr: string, require: "http" | "ws") {
   addr = deleteWebsocketHeader(deleteHttpHeader(addr));
 
   // port and ip are separated
-  let daemonPort = null;
-  let onlyAddr = null;
+  let daemonPort = 0;
+  let onlyAddr = "";
   if (addr.split(":").length === 2) {
     onlyAddr = addr.split(":")[0];
     daemonPort = parseInt(addr.split(":")[1].split("/")[0]);
@@ -35,7 +35,7 @@ export function parseForwardAddress(addr: string, require: "http" | "ws") {
     onlyAddr = addr;
   }
 
-  let path = null;
+  let path = "";
   if (addr.indexOf("/") != -1) {
     path = addr.slice(addr.indexOf("/"));
   }

@@ -122,12 +122,11 @@ const btns = computed(() => {
     {
       title: t("TXT_CODE_656a85d8"),
       icon: BuildOutlined,
-      condition: () => isAdmin.value,
       click: () => {
         rconSettingsDialog.value?.openDialog();
       },
       condition: () =>
-        instanceInfo.value?.config.type.includes(TYPE_STEAM_SERVER_UNIVERSAL) ?? false
+        (instanceInfo.value?.config.type.includes(TYPE_STEAM_SERVER_UNIVERSAL) ?? false) && isAdmin.value
     },
     {
       title: t("TXT_CODE_d23631cb"),

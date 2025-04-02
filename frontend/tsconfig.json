@@ -1,5 +1,8 @@
 {
   "files": [],
+  "paths": {
+      "common/dist": ["./common/dist/index"]
+    },
   "references": [
     {
       "path": "./tsconfig.node.json"

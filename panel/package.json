@@ -15,7 +15,8 @@
     "url": "https://github.com/MCSManager/MCSManager"
   },
   "_moduleAliases": {
-    "@languages": "../languages"
+    "@languages": "../languages",
+    "common/dist": "../common/dist"
   },
   "dependencies": {
     "@koa/router": "^10.0.0",

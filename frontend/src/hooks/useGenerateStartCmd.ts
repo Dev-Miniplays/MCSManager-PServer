@@ -56,7 +56,7 @@ export function useStartCmdBuilder() {
       const config = minecraftJava.value;
       const javaPath = config.javaPath ? `"${config.javaPath}"` : "java";
       const jarName = config.jarName.includes(" ") ? `"${config.jarName}"` : config.jarName;
-      const memArray = [];
+      const memArray: string[] = [];
       if (config.minMemory) memArray.push(`-Xms${config.minMemory}`);
       if (config.maxMemory) memArray.push(`-Xmx${config.maxMemory}`);
       const cmd = [javaPath, ...memArray, ...additionalArray, "-jar", jarName, config.suffix];
